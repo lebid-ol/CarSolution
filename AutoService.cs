@@ -9,13 +9,54 @@ namespace CarSolution
     public class AutoService
     {
         private readonly List<Car> _cars = new();
+        private readonly ILoggerService _logger;
+        private readonly INotificationService _notification;
+        private readonly ICarPricingService _pricing;
+
+        public AutoService(ILoggerService logger, INotificationService notification, ICarPricingService pricing)
+        {
+            _logger = logger;
+            _notification = notification;
+            _pricing = pricing;
+        }
 
         public IReadOnlyList<Car> Cars => _cars.AsReadOnly();
 
         public void AddCar(Car car)
         {
             if (car == null) throw new ArgumentNullException(nameof(car));
+
             _cars.Add(car);
+            _logger.Log($"Car added: {car.Make} {car.Model}");
+        }
+
+        public void PerformMaintenance(Car car)
+        {
+            if (car == null) throw new ArgumentNullException(nameof(car));
+
+            car.Refuel(10);
+            car.Stop();
+            _notification.NotifyOwner(car.Make, $"Maintenance completed for {car.Make} {car.Model}");
+            _logger.Log($"Maintenance done for {car.Make}");
+        }
+
+        public double CalculateFleetValue()
+        {
+            double total = 0;
+            foreach (var car in _cars)
+                total += _pricing.GetEstimatedValue(car);
+
+            _logger.Log($"Calculated total fleet value: {total}");
+            return total;
+        }
+
+        public Car? FindMostValuableCar()
+        {
+            if (!_cars.Any()) return null;
+
+            return _cars
+                .OrderByDescending(c => _pricing.GetEstimatedValue(c))
+                .FirstOrDefault();
         }
 
         public void RemoveCar(Car car)
@@ -54,5 +95,22 @@ namespace CarSolution
         public Car? FindNewestCar() =>
             _cars.OrderByDescending(c => c.Year).FirstOrDefault();
     }
+        public interface ILoggerService
+        {
+            void Log(string message);
+        }
 
-}
+        public interface INotificationService
+        {
+            void NotifyOwner(string carMake, string message);
+        }
+
+
+        public interface ICarPricingService
+        {
+            double GetEstimatedValue(Car car);
+        }
+    }
+
+
+

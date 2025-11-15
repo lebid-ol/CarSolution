@@ -15,8 +15,14 @@ namespace CarSolution
                 var car2 = new Car("Honda", "Civic", 2018, 32000, 5);
                 var car3 = new Car("Ford", "Focus", 2022, 5000, 0);
 
-                // Создаём автосервис и добавляем машины
-                var service = new AutoService();
+            // Создаём автосервис и добавляем машины
+            var service = new AutoService(
+                new DummyLogger(),
+                new DummyNotifier(),
+                new DummyPricing()
+                );
+
+
                 service.AddCar(car1);
                 service.AddCar(car2);
                 service.AddCar(car3);
@@ -52,7 +58,22 @@ namespace CarSolution
 
                 Console.WriteLine("\n=== Программа завершена ===");
             }
-        }
-    }
+    }   
+               class DummyLogger : ILoggerService
+            {
+                public void Log(string message) { }
+            }
+
+            class DummyNotifier : INotificationService
+            {
+                public void NotifyOwner(string owner, string message) { }
+            }
+
+            class DummyPricing : ICarPricingService
+            {
+                public double GetEstimatedValue(Car car) => 0;
+            }
+
+}
 
 

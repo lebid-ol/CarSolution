@@ -12,3 +12,4 @@ D:\Образование\Progects_C#\CarSolution\obj\Debug\net8.0\refint\CarSol
 D:\Образование\Progects_C#\CarSolution\obj\Debug\net8.0\CarSolution.pdb
 D:\Образование\Progects_C#\CarSolution\obj\Debug\net8.0\CarSolution.genruntimeconfig.cache
 D:\Образование\Progects_C#\CarSolution\obj\Debug\net8.0\ref\CarSolution.dll
+D:\Образование\Progects_C#\CarSolution\obj\Debug\net8.0\CarSolution.sourcelink.json
